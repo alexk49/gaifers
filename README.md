@@ -1,3 +1,3 @@
-# python games
+# gaifers
 
-simple python games!
+Games in flask, for gamers?
