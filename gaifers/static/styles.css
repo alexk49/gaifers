@@ -1,0 +1,19 @@
+.main {
+  height: 100vh; /* Use the full height of the viewport */
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.link-button {
+  text-decoration: none;
+  padding: 20px;
+  margin: 20px;
+  background-color: #d3d3d3;
+  color: black;
+  width: 120px;
+  height: 40px;
+  align-content: center;
+  font-size: 18px;
+}
