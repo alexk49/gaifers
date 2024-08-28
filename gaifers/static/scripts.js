@@ -1,7 +1,7 @@
 const squares = document.querySelectorAll('.square')
 
 squares.forEach(square => {
-  square.addEventListener('mouseover', (event) => {
+  square.addEventListener('mouseover', () => {
     square.classList.toggle('highlight-square')
   })
   square.addEventListener('mouseout', () => {
