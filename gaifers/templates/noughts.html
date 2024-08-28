@@ -1,3 +1,20 @@
-{% extends "layout.html" %} {% block title %}Home{% endblock %} {% block main %}
+{% extends "layout.html" %} {% block title %}Noughts and Crosses{% endblock %} {% block main %}
 <h2>Gaifers - Noughts and Crosses</h2>
+<div id="board" class="gameboard">
+  <div id="top-row" class="row">
+    <div id="top-left" class="square"></div>
+    <div id="top-center" class="square"></div>
+    <div id ="top-right" class="square"></div>
+</div>
+  <div id="middle-row" class="row">
+    <div id="middle-left" class="square"></div>
+    <div id="center" class="square"></div>
+    <div id="middle-right" class="square"></div>
+  </div>
+  <div id="bottom-row" class="row">
+    <div id="bottom-left" class="square"></div>
+    <div id="bottom-center" class="square"></div>
+    <div id="bottom-right" class="square"></div>
+  </div>
+</div>
 {% endblock %}
