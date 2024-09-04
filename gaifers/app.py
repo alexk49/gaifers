@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template, url_for
+from flask import Flask, g, jsonify, render_template, request, url_for
 
 from gaifers.noughts import GameBoard
 
@@ -7,6 +7,17 @@ app = Flask(__name__)
 
 # ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
+
+
+def get_gameboard_obj():
+    """
+    Gets gameboard object in use across flask session
+
+    Returns new gameboard if obj can't be found
+    """
+    if 'gameboard' not in g:
+        g.gameboard = GameBoard()
+    return g.gameboard
 
 
 """ App routes """
@@ -20,10 +31,16 @@ def index():
 @app.route("/noughts")
 def noughts():
     """Play noughts and crossess"""
-    return render_template("noughts.html")
+    return render_template("noughts.html", gameboard=GameBoard())
 
 
-@app.route("/noughts/data")
+@app.route("/noughts/game", methods=["POST"])
 def noughts_data():
-    gameboard = GameBoard()
-    return jsonify({'data': gameboard.board})
+    game_data = request.get_json()
+
+    gameboard = get_gameboard_obj()
+
+    for i, key, value in enumerate(game_data):
+        gameboard.board[i] = value
+
+    return jsonify({'board': gameboard.board})
