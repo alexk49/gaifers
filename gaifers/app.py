@@ -40,7 +40,7 @@ def noughts_data():
 
     gameboard = get_gameboard_obj()
 
-    for i, key, value in enumerate(game_data):
+    for i, (key, value) in enumerate(game_data["boardData"].items()):
         gameboard.board[i] = value
 
-    return jsonify({'board': gameboard.board})
+    return jsonify({'boardData': gameboard.board})
