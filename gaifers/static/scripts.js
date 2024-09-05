@@ -2,12 +2,10 @@ async function updateBoardValue (boardData, square, marker) {
   const response = await fetch('/noughts/game', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
-      headers: { 'Content-Type': 'application/json' }
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify({ boardData })
   })
-
   const result = await response.json()
 
   if (result !== null) {
