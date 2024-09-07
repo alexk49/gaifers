@@ -58,28 +58,35 @@ function updateTurnMarker (turnMarker, player1Marker, player2Marker) {
   }
 }
 
+function runGame () {
+  const player1Marker = assignMarkers()
+  const player2Marker = assignMarkers(otherPlayer = player1Marker)
+  let turnMarker = player1Marker
+
+  const squares = document.querySelectorAll('.square')
+
+  squares.forEach(square => {
+    square.addEventListener('mouseover', () => {
+      square.classList.toggle('highlight-square')
+    })
+    square.addEventListener('mouseout', () => {
+      square.classList.remove('highlight-square')
+    })
+
+    square.addEventListener('click', () => {
+      const gameData = getGameData(squares, square, turnMarker)
+      const res = updateGameValue(gameData, square, turnMarker)
+
+      if (res !== null) {
+        turnMarker = updateTurnMarker(turnMarker, player1Marker, player2Marker)
+      }
+    })
+  })
+}
+
 // main script
 
-const player1Marker = assignMarkers()
-const player2Marker = assignMarkers(otherPlayer = player1Marker)
-let turnMarker = player1Marker
-
-const squares = document.querySelectorAll('.square')
-
-squares.forEach(square => {
-  square.addEventListener('mouseover', () => {
-    square.classList.toggle('highlight-square')
-  })
-  square.addEventListener('mouseout', () => {
-    square.classList.remove('highlight-square')
-  })
-
-  square.addEventListener('click', () => {
-    const gameData = getGameData(squares, square, turnMarker)
-    const res = updateGameValue(gameData, square, turnMarker)
-
-    if (res !== null) {
-      turnMarker = updateTurnMarker(turnMarker, player1Marker, player2Marker)
-    }
-  })
+playButton = document.querySelector('#start-noughts')
+playButton.addEventListener('click', () => {
+  runGame()
 })
