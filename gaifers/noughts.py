@@ -1,5 +1,23 @@
 """A game of noughts and crosses"""
 
+game_data_default = {
+    "gameData": {
+        "new_position": "",
+        "playerMarker": "",
+        "boardData": {
+            "top-left": "",
+            "top-center": "",
+            "top-right": "",
+            "middle-left": "",
+            "center": "",
+            "middle-right": "",
+            "bottom-left": "",
+            "bottom-center": "",
+            "bottom-right": "",
+        },
+    }
+}
+
 
 class Player:
     """Player class for noughts and crosses

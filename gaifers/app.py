@@ -1,6 +1,9 @@
-from flask import Flask, g, jsonify, render_template, request, url_for
+import json
+import os
 
-from gaifers.noughts import GameBoard
+from flask import Flask, jsonify, render_template, request, session, url_for
+
+from gaifers.noughts import GameBoard, game_data_default
 
 # Configure app
 app = Flask(__name__)
@@ -8,16 +11,31 @@ app = Flask(__name__)
 # ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
+# Set the secret key directly
+app.secret_key = os.urandom(24)
 
-def get_gameboard_obj():
-    """
-    Gets gameboard object in use across flask session
 
-    Returns new gameboard if obj can't be found
+def get_game_data():
+    """Gets original stored game data session json"""
+    if "gameData" not in session:
+        session["gameData"] = json.dumps(game_data_default.copy())
+    return json.loads(session["gameData"])
+
+
+def validate_game_data(game_data: dict, org_game_data: dict) -> bool:
+    """Check game data for any changes
+    Dicts should be the same values until the new position is updated
     """
-    if 'gameboard' not in g:
-        g.gameboard = GameBoard()
-    return g.gameboard
+    new_position = game_data["gameData"]["new_position"]
+
+    for key in game_data["gameData"]["boardData"]:
+        if key == new_position and game_data["gameData"]["boardData"][key] != "":
+            print(f"{new_position} is not empty square")
+            return False
+        elif game_data["gameData"]["boardData"][key] != org_game_data["gameData"]["boardData"][key]:
+            print("new gameData doesn't match old gameData")
+            return False
+    return True
 
 
 """ App routes """
@@ -38,9 +56,14 @@ def noughts():
 def noughts_data():
     game_data = request.get_json()
 
-    gameboard = get_gameboard_obj()
+    org_game_data = get_game_data()
 
-    for i, (key, value) in enumerate(game_data["boardData"].items()):
-        gameboard.board[i] = value
+    new_position = game_data["gameData"]["new_position"]
+    marker = game_data["gameData"]["playerMarker"]
 
-    return jsonify({'boardData': gameboard.board})
+    if validate_game_data(game_data, org_game_data):
+        game_data["gameData"]["boardData"][new_position] = marker
+
+    # update session
+    session["gameData"] = json.dumps(game_data)
+    return jsonify(game_data)
