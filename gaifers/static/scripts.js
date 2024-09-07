@@ -1,31 +1,34 @@
-async function updateBoardValue (boardData, square, marker) {
+async function updateGameValue (gameData, square, turnMarker) {
   const response = await fetch('/noughts/game', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ boardData })
+    body: JSON.stringify({ gameData })
   })
   const result = await response.json()
 
   if (result !== null) {
-    square.textContent = marker
+    square.textContent = turnMarker
   } else {
     return null
   }
 }
 
-function getBoardData (squares) {
-  const boardData = {}
+function getGameData (squares, square, turnMarker) {
+  const gameData = {}
 
-  // gameData.new_position = square.id
-  // gameData.turn = square.textContent
+  gameData.new_position = square.id
+  gameData.playerMarker = turnMarker
+
+  gameData.boardData = {}
 
   // Loop through each element
   squares.forEach(square => {
-    boardData[square.id] = square.textContent.trim()
+    gameData.boardData[square.id] = square.textContent.trim()
   })
-  return boardData
+  console.log(gameData)
+  return gameData
 };
 
 function assignMarkers (otherPlayer = '') {
@@ -46,11 +49,11 @@ function assignMarkers (otherPlayer = '') {
   return playerMarker
 }
 
-function updateTurn (turn, player1Marker, player2Marker) {
+function updateTurnMarker (turnMarker, player1Marker, player2Marker) {
   // used to update turn variable to other player marker
-  if (turn === player1Marker) {
+  if (turnMarker === player1Marker) {
     return player2Marker
-  } else if (turn === player2Marker) {
+  } else if (turnMarker === player2Marker) {
     return player1Marker
   }
 }
@@ -59,7 +62,7 @@ function updateTurn (turn, player1Marker, player2Marker) {
 
 const player1Marker = assignMarkers()
 const player2Marker = assignMarkers(otherPlayer = player1Marker)
-let turn = player1Marker
+let turnMarker = player1Marker
 
 const squares = document.querySelectorAll('.square')
 
@@ -72,11 +75,11 @@ squares.forEach(square => {
   })
 
   square.addEventListener('click', () => {
-    const boardData = getBoardData(squares)
-    const res = updateBoardValue(boardData, square, turn)
+    const gameData = getGameData(squares, square, turnMarker)
+    const res = updateGameValue(gameData, square, turnMarker)
 
     if (res !== null) {
-      turn = updateTurn(turn, player1Marker, player2Marker)
+      turnMarker = updateTurnMarker(turnMarker, player1Marker, player2Marker)
     }
   })
 })
