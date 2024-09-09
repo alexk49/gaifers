@@ -3,7 +3,8 @@ import os
 
 from flask import Flask, jsonify, render_template, request, session, url_for
 
-from gaifers.noughts import GameBoard, game_data_default
+from gaifers.noughts import (check_for_draw, check_for_winner,
+                             game_data_default, validate_game_data)
 
 # Configure app
 app = Flask(__name__)
@@ -22,22 +23,6 @@ def get_game_data():
     return json.loads(session["gameData"])
 
 
-def validate_game_data(game_data: dict, org_game_data: dict) -> bool:
-    """Check game data for any changes
-    Dicts should be the same values until the new position is updated
-    """
-    new_position = game_data["gameData"]["new_position"]
-
-    for key in game_data["gameData"]["boardData"]:
-        if key == new_position and game_data["gameData"]["boardData"][key] != "":
-            print(f"{new_position} is not empty square")
-            return False
-        elif game_data["gameData"]["boardData"][key] != org_game_data["gameData"]["boardData"][key]:
-            print("new gameData doesn't match old gameData")
-            return False
-    return True
-
-
 """ App routes """
 
 
@@ -49,7 +34,7 @@ def index():
 @app.route("/noughts")
 def noughts():
     """Play noughts and crossess"""
-    return render_template("noughts.html", gameboard=GameBoard())
+    return render_template("noughts.html", game_data=get_game_data())
 
 
 @app.route("/noughts/game", methods=["POST"])
@@ -64,6 +49,15 @@ def noughts_data():
     if validate_game_data(game_data, org_game_data):
         game_data["gameData"]["boardData"][new_position] = marker
 
-    # update session
-    session["gameData"] = json.dumps(game_data)
+        game_data["gameData"]["winner"] = check_for_winner(game_data)
+
+        if game_data["gameData"]["winner"]:
+            print("WINNNERR")
+
+        game_data["gameData"]["draw"] = check_for_draw(game_data)
+        # update session
+        session["gameData"] = json.dumps(game_data)
+    else:
+        session["gameData"] = json.dumps(org_game_data)
+        game_data = org_game_data
     return jsonify(game_data)

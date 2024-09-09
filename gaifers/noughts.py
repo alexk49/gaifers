@@ -4,6 +4,8 @@ game_data_default = {
     "gameData": {
         "new_position": "",
         "playerMarker": "",
+        "winner": "false",
+        "draw": "false",
         "boardData": {
             "top-left": "",
             "top-center": "",
@@ -17,6 +19,60 @@ game_data_default = {
         },
     }
 }
+
+
+def check_for_draw(game_data: dict) -> bool:
+    """Check game data for draw,
+    runs after check for win, if any blank values remain
+    then not yet draw"""
+    for value in game_data_default["gameData"]["boardData"].values():
+        if value == "":
+            return False
+    return True
+
+
+def check_for_winner(game_data: dict) -> bool:
+    """Check game data for a winner"""
+    board = game_data["gameData"]["boardData"]
+    marker = game_data["gameData"]["playerMarker"]
+
+    print(board)
+    print(marker)
+
+    if (
+        (board["top-left"] == board["top-center"] == board["top-right"] == marker)
+        or (board["middle-left"] == board["center"] == board["middle-right"] == marker)
+        or (board["bottom-left"] == board["bottom-center"] == board["bottom-right"] == marker)
+    ):
+        return True
+    elif (
+        (board["top-left"] == board["middle-left"] == board["bottom-left"] == marker)
+        or (board["top-center"] == board["center"] == board["bottom-center"] == marker)
+        or (board["top-right"] == board["middle-right"] == board["bottom-right"] == marker)
+    ):
+        return True
+    elif (board["top-left"] == board["center"] == board["bottom-right"] == marker) or (
+        board["top-right"] == board["center"] == board["bottom-left"] == marker
+    ):
+        return True
+    else:
+        return False
+
+
+def validate_game_data(game_data: dict, org_game_data: dict) -> bool:
+    """Check game data for any changes
+    Dicts should be the same values until the new position is updated
+    """
+    new_position = game_data["gameData"]["new_position"]
+
+    for key in game_data["gameData"]["boardData"]:
+        if key == new_position and game_data["gameData"]["boardData"][key] != "":
+            print(f"{new_position} is not empty square")
+            return False
+        elif game_data["gameData"]["boardData"][key] != org_game_data["gameData"]["boardData"][key]:
+            print("new gameData doesn't match old gameData")
+            return False
+    return True
 
 
 class Player:

@@ -1,4 +1,4 @@
-async function updateGameValue (gameData, square, turnMarker) {
+async function postGameValues (gameData, square) {
   const response = await fetch('/noughts/game', {
     method: 'POST',
     headers: {
@@ -8,18 +8,16 @@ async function updateGameValue (gameData, square, turnMarker) {
   })
   const result = await response.json()
 
-  if (result !== null) {
-    square.textContent = turnMarker
-  } else {
-    return null
-  }
+  return result
 }
 
-function getGameData (squares, square, turnMarker) {
+function getLocalGameData (squares, square, turnMarker, winner, draw) {
   const gameData = {}
 
   gameData.new_position = square.id
   gameData.playerMarker = turnMarker
+  gameData.winner = winner
+  gameData.draw = draw
 
   gameData.boardData = {}
 
@@ -63,6 +61,9 @@ function runGame () {
   const player2Marker = assignMarkers(otherPlayer = player1Marker)
   let turnMarker = player1Marker
 
+  const winner = false
+  const draw = false
+
   const squares = document.querySelectorAll('.square')
 
   squares.forEach(square => {
@@ -74,10 +75,17 @@ function runGame () {
     })
 
     square.addEventListener('click', () => {
-      const gameData = getGameData(squares, square, turnMarker)
-      const res = updateGameValue(gameData, square, turnMarker)
+      const gameData = getLocalGameData(squares, square, turnMarker, winner, draw)
+      const result = postGameValues(gameData, square, turnMarker)
 
-      if (res !== null) {
+      console.log(result)
+
+      if (result.winner === true) {
+        console.log(turnMarker + ' wins!')
+      } else if (result.draw === true) {
+        console.log("it's a draw!")
+      } else {
+        square.textContent = turnMarker
         turnMarker = updateTurnMarker(turnMarker, player1Marker, player2Marker)
       }
     })
