@@ -2,19 +2,19 @@
 <h2>Gaifers - Noughts and Crosses</h2>
 <div id="board" class="gameboard">
   <div id="top-row" class="row">
-    <div id="top-left" class="square">{{ gameboard.board[0] }}</div>
-    <div id="top-center" class="square">{{ gameboard.board[1] }}</div>
-    <div id ="top-right" class="square">{{ gameboard.board[2] }}</div>
+    <div id="top-left" class="square">{{ game_data["gameData"]["boardData"]["top-left"] }}</div>
+    <div id="top-center" class="square">{{ game_data["gameData"]["boardData"]["top-center"] }}</div>
+    <div id ="top-right" class="square">{{ game_data["gameData"]["boardData"]["top-right"] }}</div>
 </div>
   <div id="middle-row" class="row">
-    <div id="middle-left" class="square">{{ gameboard.board[3] }}</div>
-    <div id="center" class="square">{{ gameboard.board[4] }}</div>
-    <div id="middle-right" class="square">{{ gameboard.board[5] }}</div>
+    <div id="middle-left" class="square">{{ game_data["gameData"]["boardData"]["middle-left"] }}</div>
+    <div id="center" class="square">{{ game_data["gameData"]["boardData"]["center"] }}</div>
+    <div id="middle-right" class="square">{{ game_data["gameData"]["boardData"]["middle-right"] }}</div>
   </div>
   <div id="bottom-row" class="row">
-    <div id="bottom-left" class="square">{{ gameboard.board[6] }}</div>
-    <div id="bottom-center" class="square">{{ gameboard.board[7] }}</div>
-    <div id="bottom-right" class="square">{{ gameboard.board[8] }}</div>
+    <div id="bottom-left" class="square">{{ game_data["gameData"]["boardData"]["bottom-left"] }}</div>
+    <div id="bottom-center" class="square">{{ game_data["gameData"]["boardData"]["bottom-center"] }}</div>
+    <div id="bottom-right" class="square">{{ game_data["gameData"]["boardData"]["bottom-right"] }}</div>
   </div>
 </div>
 <button id="start-noughts" class="play-button">Start game</button>
