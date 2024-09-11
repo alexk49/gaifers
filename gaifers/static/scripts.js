@@ -1,4 +1,4 @@
-async function postGameValues (gameData, square) {
+async function postGameValues (gameData) {
   const response = await fetch('/noughts/game', {
     method: 'POST',
     headers: {
@@ -11,13 +11,11 @@ async function postGameValues (gameData, square) {
   return result
 }
 
-function getLocalGameData (squares, square, turnMarker, winner, draw) {
+function getLocalGameData (squares, square, turnMarker) {
   const gameData = {}
 
   gameData.new_position = square.id
   gameData.playerMarker = turnMarker
-  gameData.winner = winner
-  gameData.draw = draw
 
   gameData.boardData = {}
 
@@ -25,7 +23,6 @@ function getLocalGameData (squares, square, turnMarker, winner, draw) {
   squares.forEach(square => {
     gameData.boardData[square.id] = square.textContent.trim()
   })
-  console.log(gameData)
   return gameData
 };
 
@@ -56,15 +53,52 @@ function updateTurnMarker (turnMarker, player1Marker, player2Marker) {
   }
 }
 
-function runGame () {
-  const player1Marker = assignMarkers()
-  const player2Marker = assignMarkers(otherPlayer = player1Marker)
-  let turnMarker = player1Marker
+function updateBoard (boardData, squares) {
+  // used to fully update board with
+  // all values passed from gameData
+  squares.forEach(square => {
+    if (boardData[square.id] !== undefined) {
+      square.innerText = boardData[square.id]
+    }
+  })
+}
 
-  const winner = false
-  const draw = false
+async function resetGameData () {
+  const response = await fetch('/noughts/reset', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  const gameData = await response.json()
+  return gameData
+}
 
+function writeWinner (resultBox, marker) {
+  resultBox.textContent = marker + ' is the winner!'
+}
+
+function writeDraw (resultBox) {
+  resultBox.textContent = "It's a draw!"
+}
+
+async function runGame () {
+  let running = true
+
+  let turnMarker = ''
+
+  // gets default new gameData
+  let gameData = await resetGameData()
+
+  const resultBox = document.querySelector('.result')
   const squares = document.querySelectorAll('.square')
+  // reset board with default gameData
+  updateBoard(gameData.gameData.boardData, squares)
+  resultBox.textContent = ''
+
+  const player1Marker = assignMarkers()
+  // const player2Marker = assignMarkers(otherPlayer = player1Marker)
+  turnMarker = player1Marker
 
   squares.forEach(square => {
     square.addEventListener('mouseover', () => {
@@ -74,27 +108,37 @@ function runGame () {
       square.classList.remove('highlight-square')
     })
 
-    square.addEventListener('click', () => {
-      const gameData = getLocalGameData(squares, square, turnMarker, winner, draw)
-      const result = postGameValues(gameData, square, turnMarker)
+    // has to be async to await results of
+    // async postGameValues
+    square.addEventListener('click', async () => {
+      if (square.textContent === '') {
+        const gameDataLocal = getLocalGameData(squares, square, turnMarker)
 
-      console.log(result)
+        if (running) {
+          gameData = await postGameValues(gameDataLocal, square, turnMarker)
 
-      if (result.winner === true) {
-        console.log(turnMarker + ' wins!')
-      } else if (result.draw === true) {
-        console.log("it's a draw!")
-      } else {
-        square.textContent = turnMarker
-        turnMarker = updateTurnMarker(turnMarker, player1Marker, player2Marker)
+          if (gameData.gameData.winner) {
+            updateBoard(gameData.gameData.boardData, squares)
+            writeWinner(resultBox, turnMarker)
+            running = false
+          } else if (gameData.gameData.draw) {
+            updateBoard(gameData.gameData.boardData, squares)
+            writeDraw(resultBox, turnMarker)
+            running = false
+          } else {
+            updateBoard(gameData.gameData.boardData, squares)
+            // turnMarker = updateTurnMarker(turnMarker, player1Marker, player2Marker)
+            turnMarker = gameData.gameData.playerMarker
+          }
+        }
       }
     })
   })
 }
 
-// main script
+// global script
 
-playButton = document.querySelector('#start-noughts')
+const playButton = document.querySelector('#start-noughts')
 playButton.addEventListener('click', () => {
   runGame()
 })
