@@ -21,11 +21,23 @@ game_data_default = {
 }
 
 
+def update_turn_marker(marker: str) -> str:
+    """Assigns opposite turn marker to given one.
+
+    If x returns o, returns given marker if error"""
+    if marker == "x":
+        return "o"
+    elif marker == "o":
+        return "x"
+    else:
+        return marker
+
+
 def check_for_draw(game_data: dict) -> bool:
     """Check game data for draw,
     runs after check for win, if any blank values remain
     then not yet draw"""
-    for value in game_data_default["gameData"]["boardData"].values():
+    for value in game_data["gameData"]["boardData"].values():
         if value == "":
             return False
     return True
