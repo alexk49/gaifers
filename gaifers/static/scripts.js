@@ -44,15 +44,6 @@ function assignMarkers (otherPlayer = '') {
   return playerMarker
 }
 
-function updateTurnMarker (turnMarker, player1Marker, player2Marker) {
-  // used to update turn variable to other player marker
-  if (turnMarker === player1Marker) {
-    return player2Marker
-  } else if (turnMarker === player2Marker) {
-    return player1Marker
-  }
-}
-
 function updateBoard (boardData, squares) {
   // used to fully update board with
   // all values passed from gameData
@@ -127,7 +118,6 @@ async function runGame () {
             running = false
           } else {
             updateBoard(gameData.gameData.boardData, squares)
-            // turnMarker = updateTurnMarker(turnMarker, player1Marker, player2Marker)
             turnMarker = gameData.gameData.playerMarker
           }
         }
