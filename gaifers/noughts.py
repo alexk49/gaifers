@@ -84,6 +84,12 @@ def validate_game_data(game_data: dict, org_game_data: dict) -> bool:
     return True
 
 
+def validate_marker(marker: str) -> bool:
+    if marker not in ["x", "o"]:
+        return False
+    return True
+
+
 class Player:
     """Player class for noughts and crosses
     Optional arg if other player already assigned"""

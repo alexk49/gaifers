@@ -1,11 +1,12 @@
 import json
 import os
 
-from flask import Flask, jsonify, render_template, request, session, url_for
+from flask import (Flask, jsonify, redirect, render_template, request, session,
+                   url_for)
 
 from gaifers.noughts import (check_for_draw, check_for_winner,
                              game_data_default, update_turn_marker,
-                             validate_game_data)
+                             validate_game_data, validate_marker)
 
 # Configure app
 app = Flask(__name__)
@@ -58,6 +59,9 @@ def noughts_data():
 
     new_position = game_data["gameData"]["new_position"]
     marker = game_data["gameData"]["playerMarker"]
+
+    if not validate_marker(marker):
+        return redirect("/noughts")
 
     if validate_game_data(game_data, org_game_data):
         game_data["gameData"]["boardData"][new_position] = marker
