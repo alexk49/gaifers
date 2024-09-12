@@ -48,9 +48,6 @@ def check_for_winner(game_data: dict) -> bool:
     board = game_data["gameData"]["boardData"]
     marker = game_data["gameData"]["playerMarker"]
 
-    print(board)
-    print(marker)
-
     if (
         (board["top-left"] == board["top-center"] == board["top-right"] == marker)
         or (board["middle-left"] == board["center"] == board["middle-right"] == marker)
