@@ -1,5 +1,5 @@
-async function postGameValues (gameData) {
-  const response = await fetch('/noughts/game', {
+async function postGameValues (gameData, url) {
+  const response = await fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -9,6 +9,17 @@ async function postGameValues (gameData) {
   const result = await response.json()
 
   return result
+}
+
+async function resetGameData (url) {
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  const gameData = await response.json()
+  return gameData
 }
 
 function getLocalGameData (squares, square, turnMarker) {
@@ -54,17 +65,6 @@ function updateBoard (boardData, squares) {
   })
 }
 
-async function resetGameData () {
-  const response = await fetch('/noughts/reset', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-  const gameData = await response.json()
-  return gameData
-}
-
 function writeWinner (resultBox, marker) {
   resultBox.textContent = marker + ' is the winner!'
 }
@@ -79,7 +79,7 @@ async function runGame () {
   let turnMarker = ''
 
   // gets default new gameData
-  let gameData = await resetGameData()
+  let gameData = await resetGameData('/noughts/reset')
 
   const resultBox = document.querySelector('.result')
   const squares = document.querySelectorAll('.square')
@@ -106,7 +106,7 @@ async function runGame () {
         const gameDataLocal = getLocalGameData(squares, square, turnMarker)
 
         if (running) {
-          gameData = await postGameValues(gameDataLocal, square, turnMarker)
+          gameData = await postGameValues(gameDataLocal, '/noughts/game')
 
           if (gameData.gameData.winner) {
             updateBoard(gameData.gameData.boardData, squares)
