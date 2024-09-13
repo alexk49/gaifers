@@ -65,6 +65,14 @@ function updateBoard (boardData, squares) {
   })
 }
 
+function highlightWinners (winners) {
+  console.log(winners)
+  winners.forEach(winner => {
+    const winningSquare = document.querySelector('#' + winner)
+    winningSquare.classList.toggle('winning-square')
+  })
+}
+
 function writeWinner (resultBox, marker) {
   resultBox.textContent = marker + ' is the winner!'
 }
@@ -107,17 +115,15 @@ async function runGame () {
 
         if (running) {
           gameData = await postGameValues(gameDataLocal, '/noughts/game')
-
-          if (gameData.gameData.winner) {
-            updateBoard(gameData.gameData.boardData, squares)
+          updateBoard(gameData.gameData.boardData, squares)
+          if (gameData.gameData.winners.length !== 0) {
             writeWinner(resultBox, turnMarker)
+            highlightWinners(gameData.gameData.winners, squares)
             running = false
           } else if (gameData.gameData.draw) {
-            updateBoard(gameData.gameData.boardData, squares)
             writeDraw(resultBox, turnMarker)
             running = false
           } else {
-            updateBoard(gameData.gameData.boardData, squares)
             turnMarker = gameData.gameData.playerMarker
           }
         }

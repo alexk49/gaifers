@@ -66,11 +66,11 @@ def noughts_data():
     if validate_game_data(game_data, org_game_data):
         game_data["gameData"]["boardData"][new_position] = marker
 
-        game_data["gameData"]["winner"] = check_for_winner(game_data)
+        game_data["gameData"]["winners"] = check_for_winner(game_data)
 
         game_data["gameData"]["draw"] = check_for_draw(game_data)
 
-        if not game_data["gameData"]["draw"] and not game_data["gameData"]["winner"]:
+        if not game_data["gameData"]["draw"] and len(game_data["gameData"]["winners"]) == 0:
 
             game_data["gameData"]["playerMarker"] = update_turn_marker(marker)
 

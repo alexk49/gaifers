@@ -4,7 +4,7 @@ game_data_default = {
     "gameData": {
         "new_position": "",
         "playerMarker": "",
-        "winner": "false",
+        "winners": [],
         "draw": "false",
         "boardData": {
             "top-left": "",
@@ -43,29 +43,30 @@ def check_for_draw(game_data: dict) -> bool:
     return True
 
 
-def check_for_winner(game_data: dict) -> bool:
-    """Check game data for a winner"""
+def check_for_winner(game_data: dict) -> list:
+    """Check game data for a winner, and returns list
+    of winning squares if winning conditions met"""
     board = game_data["gameData"]["boardData"]
     marker = game_data["gameData"]["playerMarker"]
 
-    if (
-        (board["top-left"] == board["top-center"] == board["top-right"] == marker)
-        or (board["middle-left"] == board["center"] == board["middle-right"] == marker)
-        or (board["bottom-left"] == board["bottom-center"] == board["bottom-right"] == marker)
-    ):
-        return True
-    elif (
-        (board["top-left"] == board["middle-left"] == board["bottom-left"] == marker)
-        or (board["top-center"] == board["center"] == board["bottom-center"] == marker)
-        or (board["top-right"] == board["middle-right"] == board["bottom-right"] == marker)
-    ):
-        return True
-    elif (board["top-left"] == board["center"] == board["bottom-right"] == marker) or (
-        board["top-right"] == board["center"] == board["bottom-left"] == marker
-    ):
-        return True
+    if (board["top-left"] == board["top-center"] == board["top-right"] == marker):
+        return ["top-left", "top-center", "top-right"]
+    elif (board["middle-left"] == board["center"] == board["middle-right"] == marker):
+        return ["middle-left", "center", "middle-right"]
+    elif (board["bottom-left"] == board["bottom-center"] == board["bottom-right"] == marker):
+        return ["bottom-left", "bottom-center", "bottom-right"]
+    elif (board["top-left"] == board["middle-left"] == board["bottom-left"] == marker):
+        return ["top-left", "middle-left", "bottom-left"]
+    elif (board["top-center"] == board["center"] == board["bottom-center"] == marker):
+        return ["top-center", "center", "bottom-center"]
+    elif (board["top-right"] == board["middle-right"] == board["bottom-right"] == marker):
+        return ["top-right", "middle-right", "bottom-right"]
+    elif (board["top-left"] == board["center"] == board["bottom-right"] == marker):
+        return ["top-left", "center", "bottom-right"]
+    elif (board["top-right"] == board["center"] == board["bottom-left"] == marker):
+        return ["top-right", "center", "bottom-left"]
     else:
-        return False
+        return []
 
 
 def validate_game_data(game_data: dict, org_game_data: dict) -> bool:

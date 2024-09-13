@@ -49,6 +49,10 @@
   font-weight: 600;
 }
 
+.winning-square {
+  background-color: red;
+}
+
 .highlight-square {
   border: 1.5px solid rgba(0, 123, 255, 0.75);
 }
