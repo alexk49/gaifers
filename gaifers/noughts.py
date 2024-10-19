@@ -1,5 +1,7 @@
 """A game of noughts and crosses"""
 
+""" Browser version """
+
 game_data_default = {
     "gameData": {
         "new_position": "",
@@ -76,10 +78,11 @@ def validate_game_data(game_data: dict, org_game_data: dict) -> bool:
     new_position = game_data["gameData"]["new_position"]
 
     for key in game_data["gameData"]["boardData"]:
+
         if key == new_position and game_data["gameData"]["boardData"][key] != "":
             print(f"{new_position} is not empty square")
             return False
-        elif game_data["gameData"]["boardData"][key] != org_game_data["gameData"]["boardData"][key]:
+        if game_data["gameData"]["boardData"][key] != org_game_data["gameData"]["boardData"][key]:
             print("new gameData doesn't match old gameData")
             return False
     return True
@@ -89,6 +92,9 @@ def validate_marker(marker: str) -> bool:
     if marker not in ["x", "o"]:
         return False
     return True
+
+
+""" CLI version """
 
 
 class Player:
