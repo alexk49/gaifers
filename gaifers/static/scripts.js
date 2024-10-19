@@ -73,6 +73,14 @@ function highlightWinners (winners) {
   })
 }
 
+function resetWinnerHighlights () {
+  const winningSquares = document.querySelectorAll('.winning-square')
+
+  winningSquares.forEach(winner => {
+    winner.classList.remove('winning-square')
+  })
+}
+
 function writeWinner (resultBox, marker) {
   resultBox.textContent = marker + ' is the winner!'
 }
@@ -91,9 +99,11 @@ async function runGame () {
 
   const resultBox = document.querySelector('.result')
   const squares = document.querySelectorAll('.square')
+  //
   // reset board with default gameData
   updateBoard(gameData.gameData.boardData, squares)
   resultBox.textContent = ''
+  resetWinnerHighlights()
 
   const player1Marker = assignMarkers()
   // const player2Marker = assignMarkers(otherPlayer = player1Marker)
