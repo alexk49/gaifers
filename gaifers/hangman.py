@@ -23,7 +23,8 @@ and a line should be drawn on screen
                     =
 """
 
-hangman = {"1": """
+hangman = {
+    "1": """
 
 
 
@@ -32,7 +33,7 @@ hangman = {"1": """
 
     =====
     """,
-     "2": """
+    "2": """
 
 
          |
@@ -41,7 +42,7 @@ hangman = {"1": """
          |
     ======
     """,
-     "3": """
+    "3": """
 
     _____
          |
@@ -103,10 +104,11 @@ hangman = {"1": """
    / \   |
          |
     ======
-    """
- }
+    """,
+}
 
 indentation = "     "
+
 
 def pick_word():
     """
@@ -121,14 +123,16 @@ def get_user_guess(word):
     User makes guess of letter or word
     """
     valid = False
-    
+
     while not valid:
         guess = input("Pick a letter or guess the word: ")
 
         if (len(guess) > 1) and (guess != len(word)):
-            print(f"Your word is {len(guess)} letters long, and my word is {len(word)}, try again!")
-        
-        if (guess.isalpha() is False):
+            print(
+                f"Your word is {len(guess)} letters long, and my word is {len(word)}, try again!"
+            )
+
+        if guess.isalpha() is False:
             print(f"Your guess {guess} isn't a letter, try again!")
         else:
             valid = True
@@ -137,7 +141,7 @@ def get_user_guess(word):
 
 
 def check_for_win(guess, word):
-    return (guess == word)
+    return guess == word
 
 
 def check_word_for_guess(guess, word, result):
@@ -151,8 +155,9 @@ def check_word_for_guess(guess, word, result):
         if char == guess:
             result[index] = char
             success = True
-    result = ''.join(result)
+    result = "".join(result)
     return result, success
+
 
 def print_word_area(word):
     print(indentation + "-" * len(word))
@@ -184,11 +189,11 @@ def main():
     count = 0
 
     word = pick_word()
-    
+
     print("")
     print_word_area(word)
     print("")
-    
+
     while win is False:
 
         guess = get_user_guess(word)
