@@ -22,6 +22,8 @@ and a line should be drawn on screen
                / \  |
                     =
 """
+from os.path import abspath
+from secrets import randbelow
 
 hangman = {
     "1": """
@@ -88,8 +90,8 @@ hangman = {
     ======
     """,
     "8": """
-    _____
 
+    _____
     o    |
    /|\   |
    /     |
@@ -114,8 +116,12 @@ def pick_word():
     """
     Pick random word from valid options
     """
-    words = ["word"]
-    return words[0]
+    words_file = abspath("gaifers/words")
+    with open(words_file) as file:
+        words = file.readlines()
+        index = randbelow((len(words) + 1))
+    print(words[index])
+    return words[index]
 
 
 def get_user_guess(word):
@@ -176,14 +182,13 @@ def declare_winner(word):
 
 
 def declare_failure(word):
-    print("oh no, you didn't guess the word in time")
+    print("oh no, you didn't guess the word in time...")
 
-    print("The word was: ")
+    print("\nThe word was: ")
     print_board(word)
 
 
-def main():
-
+def play_game():
     win = False
     result = []
     count = 0
@@ -225,6 +230,11 @@ def main():
         if count >= 9:
             declare_failure(word)
             break
+
+
+def main():
+
+    play_game()
 
 
 if __name__ == "__main__":
