@@ -28,3 +28,7 @@ Where possible a terminal version has been provided if you run the game script d
 ### noughts and crosses
 
 Run gaifers/noughts.py directly to play a terminal version of noughts and crosses.
+
+### hangman
+
+Run gaifers/hangman.py directly to play a terminal version of hangman.
