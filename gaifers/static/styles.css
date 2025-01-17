@@ -6,6 +6,10 @@
   align-items: center;
 }
 
+h2 {
+  padding: 8px;
+}
+
 .link-button {
   text-decoration: none;
   padding: 20px;

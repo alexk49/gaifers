@@ -18,4 +18,6 @@
     <main class="main">{% block main %}{% endblock %}</main>
   </body>
   <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+{% block javascript %}
+{% endblock %}
 </html>

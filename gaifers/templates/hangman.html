@@ -1,0 +1,15 @@
+{% extends "layout.html" %} {% block title %}Hangman{% endblock %} {% block main
+%}
+<h2>Gaifers - Hangman</h2>
+<div id="hangman" class="gamearea">
+  <div id="hanging-man">
+    <div>
+      <div id="word-area"></div>
+    </div>
+  </div>
+</div>
+<button id="start-hangman" class="play-button">Start game</button>
+{% endblock %}
+{% block javascript %}
+<script src="{{ url_for('static', filename='hangman.js') }}"></script>
+{% endblock %}
