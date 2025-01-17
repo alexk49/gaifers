@@ -22,6 +22,7 @@ and a line should be drawn on screen
                / \  |
                     =
 """
+
 from os.path import abspath
 from secrets import randbelow
 
@@ -121,7 +122,7 @@ def pick_word():
         words = file.readlines()
         index = randbelow((len(words) + 1))
     print(words[index])
-    return words[index]
+    return words[index].strip()
 
 
 def get_user_guess(word):
@@ -131,12 +132,11 @@ def get_user_guess(word):
     valid = False
 
     while not valid:
-        guess = input("Pick a letter or guess the word: ")
+        guess = input("Pick a letter or guess the word: ").strip()
 
-        if (len(guess) > 1) and (guess != len(word)):
-            print(
-                f"Your word is {len(guess)} letters long, and my word is {len(word)}, try again!"
-            )
+        guess_len = len(guess)
+        if (guess_len) > 1 and guess_len != len(word):
+            print(f"Your word is {len(guess)} letters long, and my word is {len(word)}, try again!")
 
         if guess.isalpha() is False:
             print(f"Your guess {guess} isn't a letter, try again!")
