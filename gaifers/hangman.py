@@ -23,8 +23,66 @@ and a line should be drawn on screen
                     =
 """
 
-from os.path import abspath
+from os.path import abspath, exists
 from secrets import randbelow
+
+""" General functions """
+
+
+def pick_word():
+    """
+    Pick random word from valid options
+    """
+
+    if exists("words"):
+        words_file = "words"
+    else:
+        words_file = abspath("gaifers/words")
+
+    with open(words_file) as file:
+        words = file.readlines()
+        index = randbelow((len(words) + 1))
+    print(words[index])
+    return words[index].strip()
+
+
+def check_for_hangman_winner(guess, word):
+    return guess == word
+
+
+def check_word_for_guess(guess, word, result):
+    success = False
+    if result == []:
+        result = list(" " * len(word))
+    else:
+        result = list(result)
+
+    for index, char in enumerate(word):
+        if char == guess:
+            result[index] = char
+            success = True
+    result = "".join(result)
+    return result, success
+
+
+""" Helpers for browser version """
+
+
+h_game_data_default = {
+    "gameData": {
+        "word_guess": "",
+        "winner": "",
+        "current_word_state": "",
+        "word_length": "",
+        "word": pick_word(),
+        "incorrect_guess_count": "0",
+        "guess_correct": False,
+        "boardState": "1",
+    }
+}
+
+
+""" terminal version display """
 
 hangman = {
     "1": """
@@ -113,18 +171,6 @@ hangman = {
 indentation = "     "
 
 
-def pick_word():
-    """
-    Pick random word from valid options
-    """
-    words_file = abspath("gaifers/words")
-    with open(words_file) as file:
-        words = file.readlines()
-        index = randbelow((len(words) + 1))
-    print(words[index])
-    return words[index].strip()
-
-
 def get_user_guess(word):
     """
     User makes guess of letter or word
@@ -144,25 +190,6 @@ def get_user_guess(word):
             valid = True
 
     return guess
-
-
-def check_for_win(guess, word):
-    return guess == word
-
-
-def check_word_for_guess(guess, word, result):
-    success = False
-    if result == []:
-        result = list(" " * len(word))
-    else:
-        result = list(result)
-
-    for index, char in enumerate(word):
-        if char == guess:
-            result[index] = char
-            success = True
-    result = "".join(result)
-    return result, success
 
 
 def print_word_area(word):
@@ -203,7 +230,7 @@ def play_game():
 
         guess = get_user_guess(word)
 
-        win = check_for_win(guess, word)
+        win = check_for_hangman_winner(guess, word)
 
         if win:
             declare_winner(word)
@@ -213,7 +240,7 @@ def play_game():
 
         if success:
 
-            win = check_for_win(result, word)
+            win = check_for_hangman_winner(result, word)
 
         else:
             count += 1
