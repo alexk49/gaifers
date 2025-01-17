@@ -4,8 +4,9 @@ import os
 from flask import (Flask, jsonify, redirect, render_template, request, session,
                    url_for)
 
+from gaifers.hangman import h_game_data_default
 from gaifers.noughts import (check_for_draw, check_for_winner,
-                             game_data_default, update_turn_marker,
+                             n_game_data_default, update_turn_marker,
                              validate_game_data, validate_marker)
 
 # Configure app
@@ -25,9 +26,9 @@ def get_game_data():
     return json.loads(session["gameData"])
 
 
-def reset_game_data():
+def reset_game_data(game_data):
     """Used to clear session variable"""
-    session["gameData"] = json.dumps(game_data_default.copy())
+    session["gameData"] = json.dumps(game_data.copy())
     return json.loads(session["gameData"])
 
 
@@ -39,15 +40,18 @@ def index():
     return render_template("index.html")
 
 
+""" Noughts and Crosses """
+
+
 @app.route("/noughts")
 def noughts():
     """Play noughts and crossess"""
-    return render_template("noughts.html", game_data=reset_game_data())
+    return render_template("noughts.html", game_data=reset_game_data(game_data=n_game_data_default))
 
 
 @app.route("/noughts/reset")
 def reset_noughts():
-    game_data = reset_game_data()
+    game_data = reset_game_data(game_data=n_game_data_default)
     return jsonify(game_data)
 
 
@@ -79,4 +83,19 @@ def noughts_data():
     else:
         session["gameData"] = json.dumps(org_game_data)
         game_data = org_game_data
+    return jsonify(game_data)
+
+
+""" Hangman game """
+
+
+@app.route("/hangman")
+def hangman():
+    """Play hangman"""
+    return render_template("hangman.html")
+
+
+@app.route("/hangman/reset")
+def reset_hangman():
+    game_data = reset_game_data(game_data=h_game_data_default)
     return jsonify(game_data)
