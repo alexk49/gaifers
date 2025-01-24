@@ -74,12 +74,21 @@ h_game_data_default = {
         "winner": "",
         "current_word_state": "",
         "word_length": "",
-        "word": pick_word(),
+        "word": "",
         "incorrect_guess_count": "0",
         "guess_correct": False,
         "boardState": "1",
     }
 }
+
+def set_hangman_data(h_game_data_default=h_game_data_default):
+    new_game_data = h_game_data_default
+    new_game_data["word"] = pick_word()
+    new_game_data["word_length"] = len(new_game_data["word"])
+    new_game_data["current_word_state"] = "_" * new_game_data["word_length"]
+
+    return new_game_data
+
 
 
 """ terminal version display """

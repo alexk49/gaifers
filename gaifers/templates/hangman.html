@@ -2,12 +2,14 @@
 %}
 <h2>Gaifers - Hangman</h2>
 <div id="hangman" class="gamearea">
-  <div id="hanging-man">
+  <div id="hanging-man"></div>
     <div>
-      <div id="word-area"></div>
+      <div id="word-area">
+        <div id="current">{{ game_data["gameData"]["current_word_state"] }}</div>
+      </div>
     </div>
-  </div>
 </div>
+<div id="input-guess"></div>
 <button id="start-hangman" class="play-button">Start game</button>
 {% endblock %}
 {% block javascript %}

@@ -4,7 +4,7 @@ import os
 from flask import (Flask, jsonify, redirect, render_template, request, session,
                    url_for)
 
-from gaifers.hangman import h_game_data_default
+from gaifers.hangman import h_game_data_default, set_hangman_data
 from gaifers.noughts import (check_for_draw, check_for_winner,
                              n_game_data_default, update_turn_marker,
                              validate_game_data, validate_marker)
@@ -92,10 +92,10 @@ def noughts_data():
 @app.route("/hangman")
 def hangman():
     """Play hangman"""
-    return render_template("hangman.html")
+    return render_template("hangman.html", game_data=h_game_data_default)
 
 
 @app.route("/hangman/reset")
 def reset_hangman():
-    game_data = reset_game_data(game_data=h_game_data_default)
+    game_data = reset_game_data(game_data=set_hangman_data())
     return jsonify(game_data)
