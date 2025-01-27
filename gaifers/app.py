@@ -110,6 +110,7 @@ def hangman_data():
     guess = sent_game_data["gameData"]["word_guess"]
 
     game_data = get_game_data()
+    print(game_data)
 
     game_data["gameData"]["current_word_state"] = current_word_state
     game_data["gameData"]["word_guess"] = guess
@@ -118,28 +119,29 @@ def hangman_data():
 
     game_data["gameData"]["winner"] = check_for_hangman_winner(guess, word)
 
-    print(guess)
-    print(word)
-    result, success = check_word_for_guess(guess, word, result=current_word_state.replace("_", " "))
+    if game_data["gameData"]["winner"] == False:
 
-    print(result)
+        result, success = check_word_for_guess(guess, word, result=current_word_state.replace("_", " "))
 
-    if success:
+        if success:
 
-        game_data["gameData"]["guess_correct"] = True
-        game_data["winner"] = check_for_hangman_winner(guess, word)
+            game_data["gameData"]["guess_correct"] = True
+            game_data["winner"] = check_for_hangman_winner(guess, word)
 
+        else:
+            count = int(game_data["gameData"]["incorrect_guess_count"])
+
+            count += 1
+
+            game_data["gameData"]["incorrect_guess_count"] = str(count)
+
+            game_data["gameData"]["guess_correct"] = False
+
+        game_data["gameData"]["current_word_state"] = result.replace(" ", "_")
     else:
-        count = int(game_data["gameData"]["incorrect_guess_count"])
+        game_data["gameData"]["current_word_state"] = word
 
-        count += 1
-
-        game_data["gameData"]["incorrect_guess_count"] = str(count)
-
-        game_data["gameData"]["guess_correct"] = False
-
-    game_data["gameData"]["current_word_state"] = result.replace(" ", "_")
-
-    print(game_data["gameData"]["current_word_state"])
-
+    print(game_data["gameData"])
+    # update session
+    session["gameData"] = json.dumps(game_data)
     return jsonify(game_data)

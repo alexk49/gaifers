@@ -2,16 +2,22 @@
 %}
 <h2>Gaifers - Hangman</h2>
 <div id="hangman" class="gamearea">
-  <div id="hanging-man"></div>
+  <div id="hangman-container">
+  <pre id="hanging-man">
+
+  </pre>
+  </div>
     <div>
       <div id="word-area">
         <div id="current">{{ game_data["gameData"]["current_word_state"] }}</div>
       </div>
     </div>
-</div>
 <div id="guess">  <label for="input-guess">Try a letter or guess the word: </label><br>
   <input type="text" id="input-field" name="input-field" value=""><br>
   <input type="submit" id="submit-button" value="Submit">
+</div>
+  <div id="used-letters"></div>
+<div id="result">
 </div>
 </div>
 <button id="start-hangman" class="play-button">Start game</button>

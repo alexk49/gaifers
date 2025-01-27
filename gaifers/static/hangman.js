@@ -1,14 +1,102 @@
+const hangman = {
+  0: '',
+  1: `
+    
+    
+    =====
+    `,
+  2: `
+         |
+         |
+         |
+         |
+    ======
+    `,
+  3: `
+    _____
+         |
+         |
+         |
+         |
+    ======
+    `,
+  4: `
+    _____
+    o    |
+         |
+         |
+         |
+    ======
+    `,
+  5: `
+    _____
+    o    |
+    |    |
+         |
+         |
+    ======
+    `,
+  6: `
+    _____
+    o    |
+   /|    |
+         |
+         |
+    ======
+    `,
+  7: `
+    _____
+    o    |
+   /|\\   |
+         |
+         |
+    ======
+    `,
+  8: `
+    _____
+    o    |
+   /|\\   |
+   /     |
+         |
+    ======
+    `,
+  9: `
+    _____
+    o    |
+   /|\\   |
+   / \\   |
+         |
+    ======
+    `
+}
+
+function writeWinner () {
+  const resultBox = document.getElementById('result')
+  resultBox.textContent = 'You guessed the word correctly!'
+}
+
+function writeLoser (word) {
+  const resultBox = document.getElementById('result')
+  resultBox.textContent = 'Oh no, you lose. The word was: ' + word
+}
+
+function resetResultBox () {
+  document.getElementById('result').textContent = ''
+}
+
 function updateCurrentWord (currentState) {
   const current = document.getElementById('current')
   current.textContent = currentState
 }
 
-function updateHangingMan (boardState) {
+function updateHangingMan (count) {
   const board = document.getElementById('hanging-man')
 
-  if (boardState === 0) {
-    board.textContent = ''
+  if (count > 9) {
+    count = 9
   }
+
+  board.textContent = hangman[count]
 }
 
 function getLocalGameData (currentState, word_guess) {
@@ -24,17 +112,37 @@ function resetInputText () {
   document.querySelector('#input-field').value = ''
 }
 
+function writeUsedLetters (letter) {
+  const letters = document.getElementById('used-letters')
+  if (letters.textContent.includes(letter)) {
+    return
+  }
+  if (letters.textContent === '') {
+    letters.textContent = 'Used letters: ' + letter
+  } else {
+    letters.textContent = 'Used letters: ' + letters.textContent.slice(14) + ', ' + letter
+  }
+}
+
+function resetUsedLetters () {
+  document.getElementById('used-letters').textContent = ''
+}
+
 async function runHangman () {
-  const running = true
+  let running = true
 
   // gets default new gameData
   let gd = await resetGameData('/hangman/reset')
   updateCurrentWord(gd.gameData.current_word_state)
   // reset hangman state
-  updateHangingMan(gd.gameData.boardState)
+  updateHangingMan(gd.gameData.incorrect_guess_count)
 
   // Update guess input
   resetInputText()
+
+  resetResultBox()
+
+  resetUsedLetters()
 
   if (running) {
     submit = document.querySelector('#submit-button')
@@ -42,19 +150,34 @@ async function runHangman () {
     submit.addEventListener('click', async () => {
       input = document.querySelector('#input-field').value
       if (input != '') {
+        if (input.length === 1) {
+          writeUsedLetters(input)
+        }
+
         const gameDataLocal = getLocalGameData(gd.gameData.current_word_state, input)
 
         gd = await postGameValues(gameDataLocal, '/hangman/game')
 
+        console.log(gd.gameData)
+
         updateCurrentWord(gd.gameData.current_word_state)
 
-        updateHangingMan(gd.gameData.boardState)
+        updateHangingMan(gd.gameData.incorrect_guess_count)
 
         resetInputText()
+
+        if (gd.gameData.winner === true) {
+          writeWinner()
+          running = false
+        } else if (gd.gameData.incorrect_guess_count >= 9) {
+          writeLoser()
+          running = false
+        }
       }
     })
   }
 }
+
 // global script
 
 const playHangmanButton = document.querySelector('#start-hangman')
