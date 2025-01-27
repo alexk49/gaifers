@@ -77,7 +77,7 @@ h_game_data_default = {
         "word": "",
         "incorrect_guess_count": "0",
         "guess_correct": False,
-        "boardState": "1",
+        "boardState": "0",
     }
 }
 
