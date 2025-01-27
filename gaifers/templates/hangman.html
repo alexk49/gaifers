@@ -1,18 +1,13 @@
 {% extends "layout.html" %} {% block title %}Hangman{% endblock %} {% block main
 %}
 <h2>Gaifers - Hangman</h2>
-<div id="hangman" class="gamearea">
-  <div id="hangman-container">
-  <pre id="hanging-man">
-
-  </pre>
-  </div>
-    <div>
+<div id="hangman-container" class="gamearea">
+  <pre id="hanging-man"></pre>
       <div id="word-area">
-        <div id="current">{{ game_data["gameData"]["current_word_state"] }}</div>
+        <div id="current"></div>
       </div>
-    </div>
-<div id="guess">  <label for="input-guess">Try a letter or guess the word: </label><br>
+<div id="guess">
+<label for="input-guess">Try a letter or guess the word: </label><br>
   <input type="text" id="input-field" name="input-field" value=""><br>
   <input type="submit" id="submit-button" value="Submit">
 </div>
