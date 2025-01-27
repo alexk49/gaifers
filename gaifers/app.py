@@ -4,7 +4,8 @@ import os
 from flask import (Flask, jsonify, redirect, render_template, request, session,
                    url_for)
 
-from gaifers.hangman import h_game_data_default, set_hangman_data
+from gaifers.hangman import (check_for_hangman_winner, check_word_for_guess,
+                             h_game_data_default, set_hangman_data)
 from gaifers.noughts import (check_for_draw, check_for_winner,
                              n_game_data_default, update_turn_marker,
                              validate_game_data, validate_marker)
@@ -98,4 +99,47 @@ def hangman():
 @app.route("/hangman/reset")
 def reset_hangman():
     game_data = reset_game_data(game_data=set_hangman_data())
+    return jsonify(game_data)
+
+
+@app.route("/hangman/game", methods=["POST"])
+def hangman_data():
+    sent_game_data = request.get_json()
+
+    current_word_state = sent_game_data["gameData"]["current_word_state"]
+    guess = sent_game_data["gameData"]["word_guess"]
+
+    game_data = get_game_data()
+
+    game_data["gameData"]["current_word_state"] = current_word_state
+    game_data["gameData"]["word_guess"] = guess
+
+    word = game_data["gameData"]["word"]
+
+    game_data["gameData"]["winner"] = check_for_hangman_winner(guess, word)
+
+    print(guess)
+    print(word)
+    result, success = check_word_for_guess(guess, word, result=current_word_state.replace("_", " "))
+
+    print(result)
+
+    if success:
+
+        game_data["gameData"]["guess_correct"] = True
+        game_data["winner"] = check_for_hangman_winner(guess, word)
+
+    else:
+        count = int(game_data["gameData"]["incorrect_guess_count"])
+
+        count += 1
+
+        game_data["gameData"]["incorrect_guess_count"] = str(count)
+
+        game_data["gameData"]["guess_correct"] = False
+
+    game_data["gameData"]["current_word_state"] = result.replace(" ", "_")
+
+    print(game_data["gameData"]["current_word_state"])
+
     return jsonify(game_data)

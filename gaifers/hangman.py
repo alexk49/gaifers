@@ -81,14 +81,14 @@ h_game_data_default = {
     }
 }
 
+
 def set_hangman_data(h_game_data_default=h_game_data_default):
     new_game_data = h_game_data_default
-    new_game_data["word"] = pick_word()
-    new_game_data["word_length"] = len(new_game_data["word"])
-    new_game_data["current_word_state"] = "_" * new_game_data["word_length"]
+    new_game_data["gameData"]["word"] = pick_word()
+    new_game_data["gameData"]["word_length"] = len(new_game_data["gameData"]["word"])
+    new_game_data["gameData"]["current_word_state"] = "_" * new_game_data["gameData"]["word_length"]
 
     return new_game_data
-
 
 
 """ terminal version display """
