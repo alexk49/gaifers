@@ -1,27 +1,19 @@
 {% extends "layout.html" %} {% block title %}Hangman{% endblock %} {% block main
 %}
 <h2>Gaifers - Hangman</h2>
-<div id="hangman" class="gamearea">
-  <div id="hangman-container">
-  <pre id="hanging-man">
-
-  </pre>
+<div id="hangman-container" class="gamearea">
+  <pre id="hanging-man"></pre>
+  <div id="current">Click start game to begin.</div>
+  <div id="guess">
+    <label for="input-guess">Try a letter or guess the word: </label><br>
+      <input type="text" id="input-field" name="input-field" value=""><br>
+      <input type="submit" id="submit-button" value="Submit">
   </div>
-    <div>
-      <div id="word-area">
-        <div id="current">{{ game_data["gameData"]["current_word_state"] }}</div>
-      </div>
-    </div>
-<div id="guess">  <label for="input-guess">Try a letter or guess the word: </label><br>
-  <input type="text" id="input-field" name="input-field" value=""><br>
-  <input type="submit" id="submit-button" value="Submit">
-</div>
   <div id="used-letters"></div>
-<div id="result">
-</div>
+  <div id="result"></div>
 </div>
 <button id="start-hangman" class="play-button">Start game</button>
 {% endblock %}
 {% block javascript %}
-<script src="{{ url_for('static', filename='hangman.js') }}"></script>
+<script type="module" src="{{ url_for('static', filename='hangman.js') }}"></script>
 {% endblock %}

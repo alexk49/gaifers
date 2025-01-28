@@ -1,72 +1,85 @@
+import { postGameValues, resetGameData } from './helpers.js'
+
 const hangman = {
-  0: '',
+  0: `
+
+
+
+
+
+
+ `,
   1: `
-    
-    
-    =====
+
+
+
+
+
+ =====
     `,
   2: `
-         |
-         |
-         |
-         |
-    ======
+
+      |
+      |
+      |
+      |
+ ======
     `,
   3: `
-    _____
-         |
-         |
-         |
-         |
-    ======
+ _____
+      |
+      |
+      |
+      |
+ ======
     `,
   4: `
-    _____
-    o    |
-         |
-         |
-         |
-    ======
+ _____
+ o    |
+      |
+      |
+      |
+ ======
     `,
   5: `
-    _____
-    o    |
-    |    |
-         |
-         |
-    ======
+ _____
+ o    |
+ |    |
+      |
+      |
+ ======
     `,
   6: `
-    _____
-    o    |
-   /|    |
-         |
-         |
-    ======
+ _____
+ o    |
+/|    |
+      |
+      |
+ ======
     `,
   7: `
-    _____
-    o    |
-   /|\\   |
-         |
-         |
-    ======
+ _____
+ o    |
+/|\\   |
+      |
+      |
+ ======
     `,
   8: `
-    _____
-    o    |
-   /|\\   |
-   /     |
-         |
-    ======
+ _____
+ o    |
+/|\\   |
+/     |
+      |
+ ======
     `,
   9: `
-    _____
-    o    |
-   /|\\   |
-   / \\   |
-         |
-    ======
+ _____
+ o    |
+/|\\   |
+/ \\   |
+      |
+======
     `
 }
 
@@ -99,11 +112,11 @@ function updateHangingMan (count) {
   board.textContent = hangman[count]
 }
 
-function getLocalGameData (currentState, word_guess) {
+function getLocalGameData (currentState, wordGuess) {
   const gameData = {}
 
   gameData.current_word_state = currentState
-  gameData.word_guess = word_guess
+  gameData.word_guess = wordGuess
 
   return gameData
 }
@@ -132,7 +145,7 @@ async function runHangman () {
   let running = true
 
   // gets default new gameData
-  let gd = await resetGameData('/hangman/reset')
+  const gd = await resetGameData('/hangman/reset')
   updateCurrentWord(gd.gameData.current_word_state)
   // reset hangman state
   updateHangingMan(gd.gameData.incorrect_guess_count)
@@ -145,18 +158,20 @@ async function runHangman () {
   resetUsedLetters()
 
   if (running) {
-    submit = document.querySelector('#submit-button')
+    const submit = document.querySelector('#submit-button')
 
     submit.addEventListener('click', async () => {
-      input = document.querySelector('#input-field').value
-      if (input != '') {
+      const input = document.querySelector('#input-field').value
+      if (input !== '') {
         if (input.length === 1) {
           writeUsedLetters(input)
         }
 
-        const gameDataLocal = getLocalGameData(gd.gameData.current_word_state, input)
+        const currentWordState = document.getElementById('current').textContent
 
-        gd = await postGameValues(gameDataLocal, '/hangman/game')
+        const gameDataLocal = getLocalGameData(currentWordState, input)
+
+        const gd = await postGameValues(gameDataLocal, '/hangman/game')
 
         console.log(gd.gameData)
 
@@ -179,6 +194,8 @@ async function runHangman () {
 }
 
 // global script
+
+updateHangingMan(0)
 
 const playHangmanButton = document.querySelector('#start-hangman')
 

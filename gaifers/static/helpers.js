@@ -1,4 +1,4 @@
-async function postGameValues (gameData, url) {
+export async function postGameValues (gameData, url) {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
@@ -11,7 +11,7 @@ async function postGameValues (gameData, url) {
   return result
 }
 
-async function resetGameData (url) {
+export async function resetGameData (url) {
   const response = await fetch(url, {
     method: 'GET',
     headers: {
