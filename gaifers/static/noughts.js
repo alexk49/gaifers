@@ -1,3 +1,5 @@
+import { postGameValues, resetGameData } from './helpers.js'
+
 function getLocalNoughtsGameData (squares, square, turnMarker) {
   const gameData = {}
 

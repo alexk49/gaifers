@@ -22,5 +22,5 @@
 <div id="noughts-result" class="result"></div>
 {% endblock %}
 {% block javascript %}
-<script src="{{ url_for('static', filename='noughts.js') }}"></script>
+<script type="module" src="{{ url_for('static', filename='noughts.js') }}"></script>
 {% endblock %}
