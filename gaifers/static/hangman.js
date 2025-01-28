@@ -141,6 +141,38 @@ function resetUsedLetters () {
   document.getElementById('used-letters').textContent = ''
 }
 
+async function submitWord (running) {
+  const input = document.querySelector('#input-field').value
+  if (input !== '') {
+    if (input.length === 1) {
+      writeUsedLetters(input)
+    }
+
+    const currentWordState = document.getElementById('current').textContent
+
+    const gameDataLocal = getLocalGameData(currentWordState, input)
+
+    const gd = await postGameValues(gameDataLocal, '/hangman/game')
+
+    console.log(gd.gameData)
+
+    updateCurrentWord(gd.gameData.current_word_state)
+
+    updateHangingMan(gd.gameData.incorrect_guess_count)
+
+    resetInputText()
+
+    if (gd.gameData.winner === true) {
+      writeWinner()
+      running = false
+    } else if (gd.gameData.incorrect_guess_count >= 9) {
+      writeLoser()
+      running = false
+    }
+  }
+  return running
+}
+
 async function runHangman () {
   let running = true
 
@@ -160,36 +192,24 @@ async function runHangman () {
   if (running) {
     const submit = document.querySelector('#submit-button')
 
-    submit.addEventListener('click', async () => {
-      const input = document.querySelector('#input-field').value
-      if (input !== '') {
-        if (input.length === 1) {
-          writeUsedLetters(input)
-        }
-
-        const currentWordState = document.getElementById('current').textContent
-
-        const gameDataLocal = getLocalGameData(currentWordState, input)
-
-        const gd = await postGameValues(gameDataLocal, '/hangman/game')
-
-        console.log(gd.gameData)
-
-        updateCurrentWord(gd.gameData.current_word_state)
-
-        updateHangingMan(gd.gameData.incorrect_guess_count)
-
-        resetInputText()
-
-        if (gd.gameData.winner === true) {
-          writeWinner()
-          running = false
-        } else if (gd.gameData.incorrect_guess_count >= 9) {
-          writeLoser()
-          running = false
-        }
+    const handleSubmit = () => {
+      running = submitWord(running)
+      if (!running) {
+        // If `running` is false, remove event listeners
+        submit.removeEventListener('click', handleSubmit)
+        document.removeEventListener('keydown', handleKeydown)
+        console.log('Event listeners removed.')
       }
-    })
+    }
+
+    const handleKeydown = (event) => {
+      if (event.key === 'Enter') {
+        handleSubmit()
+      }
+    }
+
+    submit.addEventListener('click', handleSubmit)
+    document.addEventListener('keydown', handleKeydown)
   }
 }
 
