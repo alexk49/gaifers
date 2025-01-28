@@ -195,9 +195,7 @@ async function runHangman () {
 
 // global script
 
-updateHangingMan(0)
-
-const playHangmanButton = document.querySelector('#start-hangman')
+const playHangmanButton = document.getElementById('start-hangman')
 
 playHangmanButton.addEventListener('click', () => {
   runHangman()
