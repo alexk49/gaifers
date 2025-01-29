@@ -1,7 +1,4 @@
-from unittest.mock import patch
-
 import pytest
-
 from gaifers import noughts
 
 
@@ -11,19 +8,11 @@ def gameboard():
 
 
 @pytest.fixture
-def mock_input():
-    """Provides mocked input for python built in input
-    mock_input can be reused across tests"""
-    with patch("builtins.input") as mocked_input:
-        yield mocked_input
-
-
-@pytest.fixture
 def test_player(mock_input):
     """Player marker defined on init
     Tests faulty input then assigns x as marker"""
     mock_input.side_effect = ["z", "20", "x"]
-    test_player = noughts.Player()
+    test_player = noughts.Player(mock_input.side_effect)
     assert test_player.marker == "x"
     return test_player
 
