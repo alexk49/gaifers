@@ -166,7 +166,7 @@ async function submitWord (running) {
       writeWinner()
       running = false
     } else if (gd.gameData.incorrect_guess_count >= 9) {
-      writeLoser()
+      writeLoser(gd.gameData.word)
       running = false
     }
   }
