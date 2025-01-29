@@ -1,5 +1,4 @@
 import pytest
-
 from gaifers import noughts
 
 
@@ -17,7 +16,7 @@ def test_validate_marker():
 
 
 def test_check_for_draw():
-    game_data = noughts.game_data_default
+    game_data = noughts.n_game_data_default
 
     assert noughts.check_for_draw(game_data) == False
 
@@ -35,7 +34,7 @@ def test_check_for_draw():
 
 
 def test_check_for_winner():
-    game_data = noughts.game_data_default.copy()
+    game_data = noughts.n_game_data_default.copy()
 
     assert noughts.check_for_winner(game_data) == []
 
@@ -49,13 +48,13 @@ def test_check_for_winner():
 
 
 def test_validate_game_data():
-    game_data = noughts.game_data_default.copy()
-    org_game_data = noughts.game_data_default.copy()
+    game_data = noughts.n_game_data_default.copy()
+    org_game_data = noughts.n_game_data_default.copy()
 
     game_data["gameData"]["playerMarker"] = "x"
     game_data["gameData"]["new_position"] = "top-left"
     game_data["gameData"]["boardData"]["top-left"] = "y"
-    
+
     org_game_data["gameData"]["new_position"] = "top-right"
     org_game_data["gameData"]["boardData"]["top-right"] = "x"
     org_game_data["gameData"]["boardData"]["top-left"] = "x"
