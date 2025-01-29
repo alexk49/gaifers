@@ -61,17 +61,30 @@ h2 {
   border: 1.5px solid rgba(0, 123, 255, 0.75);
 }
 
-.play-button {
+.play-button,
+.submit-button {
   margin: 12px;
   padding: 6px;
 }
 
 #hangman-container {
   text-align: center;
+  display: flex;
+  flex-direction: column;
 }
 
 #hanging-man {
   font-size: 16px;
   line-height: 1.2;
   margin: 0;
+}
+
+input {
+  padding: 4px;
+  margin: 4px;
+}
+
+#current {
+  padding: 4px;
+  margin: 4px;
 }
