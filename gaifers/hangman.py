@@ -42,7 +42,6 @@ def pick_word():
     with open(words_file) as file:
         words = file.readlines()
         index = randbelow((len(words) + 1))
-    print(words[index])
     return words[index].strip()
 
 
